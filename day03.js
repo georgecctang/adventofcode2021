@@ -1,6 +1,6 @@
 // Part 1. Get gamma and epsilon
 
-const getGamma = (codes) => {
+const getGammaAndEpsilon = (codes) => {
   const codeLength = codes[0].length;
   
   let gammaObj = {};
@@ -35,6 +35,54 @@ const getGamma = (codes) => {
 
 // Part 2. Get O2 and CO2
 
+const convertBinaryToDecimal = (input) => {
+  const binaryLength = input.length;
+  let output = 0;
+  for (let i = 0; i < binaryLength; i++) {
+    output += 2**(binaryLength - 1 - i) * Number(input[i]); 
+  }
+  return output;
+}
+
+
+const getGas = (input, keepMajority = true) => {
+
+  let data = input;
+  const codeLength = data[0].length;
+  
+  let indexPosition = 0;
+  // stop if 1. one code left or 2. all index scanned 
+  while (indexPosition < codeLength && data.length > 1) {
+    let ones = 0;
+    let zeroes = 0;
+    for (let dataPosition = 0; dataPosition < data.length; dataPosition++) {
+      if (data[dataPosition][indexPosition] === '1') {
+        ones++;
+      } else {
+        zeroes++;
+      }
+    }    
+    let binaryToKeep = keepMajority ? (ones >= zeroes ? '1' : '0'): (zeroes > ones ? '1' : '0');
+    // console.log('binaryToKeep',indexToKeep);
+    // create another data list
+    const tempData = [];
+
+    for (let dataPosition = 0; dataPosition < data.length; dataPosition++) {
+      if (data[dataPosition][indexPosition] === binaryToKeep) {
+        tempData.push(data[dataPosition])
+        // console.log('position',i);
+      }
+    }
+    // console.log(tempData);
+    data = tempData;
+    indexPosition++;
+  }
+
+  return convertBinaryToDecimal(data[0]);
+  
+}
+
+
 
 const fs = require('fs');
 
@@ -44,8 +92,7 @@ fs.readFile('./data/day03.txt',  (err, data) => {
 
   const str = data.toString().split("\n");
 
-  // console.log(directions.slice(directions.length - 5));
-  // console.log(getPosition(directions));
-  console.log(getGamma(str));
-
-})
+  // console.log(getGammaAndEpsilon(str));
+  console.log(getGas(str, true) *getGas(str, false) );
+  // console.log();
+});
