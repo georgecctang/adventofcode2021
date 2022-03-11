@@ -30,7 +30,6 @@ const increaseFish = (fish) => {
   return data;
 }
 
-
 const fs = require('fs');
 
 fs.readFile('./data/day06.txt',  (err, data) => { 
